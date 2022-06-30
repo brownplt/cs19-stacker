@@ -118,7 +118,9 @@
     ((c-vec it)
      (t-app (t-quote (v-prim (po-mvec))) (map term-of-c it)))
     ((c-list it)
-     (t-app (t-quote (v-prim (po-list))) (map term-of-c it)))))
+     (if (empty? it)
+         (t-quote (v-empty))
+         (t-app (t-quote (v-prim (po-list))) (map term-of-c it))))))
 
 
 (define (simple? e)
@@ -149,8 +151,7 @@
                (raise (exn-internal 'apply-stack "The empty stack should have been caught by P-exp")))
               ((cons sf0 stack)
                (local ((define-values (env ectx ann) sf0))
-                 (continue-returned the-heap v env ectx stack)
-                 #;
+                 #;(continue-returned the-heap v env ectx stack)
                  (values the-heap (returned v env ectx stack))))))
           (define (continue-returning the-heap v stack)
             (apply-stack the-heap v stack))
@@ -318,7 +319,9 @@
                 ((op-fun clos-env arg-x* def* body)
                  (values the-heap (calling fun arg-v* env ectx stack clos-env arg-x* def* body))))))
           (define (do-call the-heap fun arg-v* env ectx stack clos-env arg-x* def* body) : State
-            (let ([stack (cons (values env ectx (ca-app fun arg-v*)) stack)])
+            (let ([stack (if (empty? ectx)
+                             stack
+                             (cons (values env ectx (ca-app fun arg-v*)) stack))])
               (let-values (((the-heap env) (env-extend/declare the-heap clos-env
                                                                 (append (map2 pair arg-x* (map some arg-v*))
                                                                         (map (lambda (def)

@@ -11,10 +11,14 @@
      (format "error: ~a" (o-exn-it o))]
     [(o-con? o) (string-of-c (o-con-it o))]
     [(o-vec? o) (format "'#(~a)" (string-join (vector->list (vector-map string-of-o-internal (o-vec-it o))) " "))]
-    [(o-list? o) (format "'(~a)" (string-join (map string-of-o-internal (o-list-it o)) " "))]
+    [(o-list? o)
+     (let ([o (o-list-it o)])
+       (if (empty? o)
+           "'()"
+           (format "(list ~a)" (string-join (map string-of-o-internal o) " "))))]
     [(o-fun? o)
      (if (some? (o-fun-it o))
-         (some-v (o-fun-it o))
+         (format "~a" (some-v (o-fun-it o)))
          "#<procedure>")
      #;
      (if (some? (o-fun-it o))
@@ -48,4 +52,5 @@
     [(c-str? c) (c-str-it c)]
     [(c-num? c) (c-num-it c)]
     [(c-bool? c) (c-bool-it c)]
-    [else (error 'show "internal error" c)]))
+    [(c-char? c) (c-char-it c)]
+    [else (error 'show "internal error ~a" c)]))

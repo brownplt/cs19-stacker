@@ -349,7 +349,7 @@
               (define (doc-of-ee [ee : (Term * Term)])
                 (local [(define-values (e1 e2) ee)]
                   (doc-brack
-                   (hs-concat
+                   (v-concat
                     (list
                      (doc-of-e e1)
                      (doc-of-e e2))))))

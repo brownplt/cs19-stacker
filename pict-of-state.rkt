@@ -34,8 +34,8 @@
 (define tp-stack-frame tp-B-D)
 (define tp-calling tp-B-D)
 (define tp-called tp-A-D)
-(define tp-returning tp-B-L)
-(define tp-returned tp-A-L)
+(define tp-returning tp-A-D)
+(define tp-returned tp-A-D)
 (define tp-terminated tp-black)
 (define tp-errored tp-C)
 
@@ -86,19 +86,19 @@
          (plate (vl-append padding
                          (field "Calling" app)
                          (field "in" ectx)
-                         (field-pict "where" (pict-env heap env)))))]
+                         (pict-env heap env))))]
       [`("called" ,body ,env)
        (parameterize ([current-text-palette tp-called])
        (plate (vl-append padding
                          (field-label "Evaluating the function body")
                          (field-value body)
-                         (field-pict "where" (pict-env heap env)))))]
+                         (pict-env heap env))))]
       [`("returned" ,v ,env ,ectx)
        (parameterize ([current-text-palette tp-returned])
-       (plate (vl-append padding
-                         (field "Returned" v)
-                         (field "to" ectx)
-                         (field-pict "where" (pict-env heap env)))))]
+        (plate (vl-append padding
+                          (field-label "Resuming the computation after return")
+                          (field-value (string-replace ectx "□" v))
+                          (pict-env heap env))))]
       [`("returning" ,v)
        (parameterize ([current-text-palette tp-returning])
        (plate (vl-append padding
@@ -229,7 +229,7 @@
     (frame (bg (pad padding p))))
   (define (pict-of-binding binding)
     (match-define (list x v) binding)
-    (ht-append padding
+        (ht-append padding
                (field-value x)
                (field-label "↦")
                (field-value v)))
@@ -264,12 +264,14 @@
                          (field-label "Waiting for a value")
                          (field "in" ectx)
                          #;(field "Environment @" env)
-                         (field-pict "where" (pict-env heap env))))))))
+                         (pict-env heap env)))))))
   (define (pict-env heap env)
-    (match-let ([`("env" ,env ,bindings) (first (dict-ref heap env))])
-      (apply vl-append padding
-              (map pict-of-binding
-                    (sort bindings string<=? #:key first)))))
+    (match-let ([`("env" ,env ,binding*) (first (dict-ref heap env))])
+      (let* ([binding* (sort binding* string<=? #:key first)]
+             [binding* (filter (lambda (kv) (not (equal? (first kv) (second kv)))) binding*)])
+        (if (empty? binding*)
+            (blank)
+            (field-pict "where" (apply vl-append padding (map pict-of-binding binding*)))))))
 
   (define (pad n p)
     (hc-append (blank n)
