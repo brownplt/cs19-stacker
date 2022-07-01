@@ -17,7 +17,7 @@
                  [sandbox-eval-limits (list 10 #f)]
                  [sandbox-propagate-exceptions #f])
     (define ev (make-module-evaluator
-                `(module m cs19-step/semantics
+                `(module m cs19-stacker/semantics
                    #:no-trace
                    ,@program)))
     (normalize (get-output ev))))
