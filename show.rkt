@@ -44,9 +44,10 @@
     [(o-var? o) (format "#~a#" (o-var-id o))]
     [else (error 'show "internal error ~a" o)]))
 (define (string-of-c c)
-  (define p (open-output-string))
-  (write (pre-string-of-c c) p)
-  (get-output-string p))
+  (parameterize ([print-boolean-long-form #t])
+    (define p (open-output-string))
+    (write (pre-string-of-c c) p)
+    (get-output-string p)))
 (define (pre-string-of-c c)
   (cond
     [(c-str? c) (c-str-it c)]
