@@ -97,14 +97,20 @@
   (type-case PrimitiveOp p
     [(po-not)
      (doc-of-x 'not)]
+    [(po-sub1)
+     (doc-of-x 'sub1)]
+    [(po-add1)
+     (doc-of-x 'add1)]
     [(po-left)
      (doc-of-x 'left)]
     [(po-right)
      (doc-of-x 'right)]
     [(po-vlen)
      (doc-of-x 'vlen)]
+    [(po-check-expect)
+     (doc-of-x 'check-expect)]
     [(po-eqp)
-     (doc-of-x 'equal?)]
+     (doc-of-x 'eq?)]
     [(po-equalp)
      (doc-of-x 'equal?)]
     [(po-zerop)

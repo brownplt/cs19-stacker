@@ -364,6 +364,14 @@
             (type-case
                 PrimitiveOp
               op
+              ((po-add1)
+               (let ((v (list-ref v-arg* 0)))
+                 (let ((v (as-num v)))
+                   (values the-heap (v-num (add1 v))))))
+              ((po-sub1)
+               (let ((v (list-ref v-arg* 0)))
+                 (let ((v (as-num v)))
+                   (values the-heap (v-num (sub1 v))))))
               ((po-not)
                (let ((v (list-ref v-arg* 0)))
                  (let ((v (as-bool v)))
@@ -409,6 +417,10 @@
                  (let ((v2 (list-ref v-arg* 1)))
                    (values the-heap (v-bool (equal? v1 v2))))))
               ((po-equalp)
+               (let ((v1 (list-ref v-arg* 0)))
+                 (let ((v2 (list-ref v-arg* 1)))
+                   (values the-heap (v-bool (do-equal? the-heap v1 v2))))))
+              ((po-check-expect)
                (let ((v1 (list-ref v-arg* 0)))
                  (let ((v2 (list-ref v-arg* 1)))
                    (values the-heap (v-bool (do-equal? the-heap v1 v2))))))
