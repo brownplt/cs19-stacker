@@ -50,7 +50,8 @@
   (send the-frame create-status-line)
   (define button-panel
     (new horizontal-panel%
-         [parent the-frame]))
+         [parent the-frame]
+         [stretchable-height #f]))
   (define the-canvas
     (new canvas%
          [parent the-frame]
@@ -64,7 +65,7 @@
                 (send the-prev-button enable (has-past?))
                 (send the-next-button enable (or (has-future?) (not (terminate? state))))
                 (send the-frame set-status-text (if (terminate? state) "terminated" "still running"))
-                (send the-frame resize 10 10)
+                ;;; (send the-frame resize 10 10)
                 (draw-pict current-pict dc 1 1))))]))
   (define the-prev-button
     (new button%

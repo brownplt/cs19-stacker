@@ -35,9 +35,9 @@
 (define tp-stack tp-black)
 (define tp-stack-frame tp-B-D)
 (define tp-calling tp-B-D)
-(define tp-called tp-A-L)
-(define tp-returning tp-A-D)
-(define tp-returned tp-A-DD)
+(define tp-called tp-A-DD)
+(define tp-returning tp-A-L)
+(define tp-returned tp-A-D)
 (define tp-terminated tp-black)
 (define tp-errored tp-C)
 
@@ -70,7 +70,7 @@
   ;;; (define color-refer color-other)
 
 (define (text s)
-  (pre-text 'modern))
+  (pre-text s 'modern))
 (define (pre-text s font-family)
   (define style
     (cons (current-text-color) font-family))
@@ -241,7 +241,7 @@
   (define padding 5)
 
   (define (field-label name)
-    (pre-text name 'symbol))
+    (pre-text name 'system))
   (define (field-value value)
     (parameterize ([current-text-palette tp-white])
       (bg (text value))))
