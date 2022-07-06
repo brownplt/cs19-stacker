@@ -10,7 +10,7 @@ Please follow these instructions to install or update
 2. Go to the menu `File` | `Package Manager...`. A window will pop up.
 3. Make sure you are in `Do What I Mean` tab of the pop-up window.
 4. Set the `Package Source` field to `https://github.com/brownplt/cs19-stacker.git`
-5. Click the `Show Details` butoon.
+5. Click the `Show Details` button.
 6. Set the `Dependencies Mode` field to `Auto`.
 7. Click the `Install` button. (If you have already installed, you will see "Update" instead of "Install".) Most buttons will grey out immediately (except the `Abort Install`).
 8. After the color of those buttons come back, you can close the pop-up window. This usually takes less than 1 min.
