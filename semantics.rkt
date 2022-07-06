@@ -9,18 +9,18 @@
 (define (my-pict-of-state state)
   ((pict-of-state #t #t) ((s-exp-of-state #f) state)))
 
-(define (run tracing? e)
+(define (run show-closures? e)
   (define check void)
-  (eval tracing? check my-pict-of-state (parse e))
-  #;(eval tracing? check pictify (parse e))
+  (eval show-closures? check my-pict-of-state (parse e))
+  #;(eval show-closures? check pictify (parse e))
   )
 
 (define-syntax (my-module-begin stx)
   (syntax-case stx ()
-    [(_ #:no-trace form ...)
-     #'(#%module-begin (run #f '(form ...)))]
+    [(_ #:show-closures form ...)
+     #'(#%module-begin (run #t '(form ...)))]
     [(_ form ...)
-     #'(#%module-begin (run #t '(form ...)))]))
+     #'(#%module-begin (run #f '(form ...)))]))
 
 (define-syntax (my-top-interaction stx)
   (syntax-case stx ()

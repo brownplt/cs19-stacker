@@ -7,7 +7,8 @@
 
 ;;; This color palette has been checked with
 ;;;   https://color.adobe.com/zh/create/color-accessibility
-;; dark and light blue (#0000C8 & #0000FF)
+;; dark and light blue (#000096 & #0000C8 & #0000FF)
+(define color-A-DD (make-object color% 0 0 150))
 (define color-A-D (make-object color% 0 0 200))
 (define color-A-L (make-object color% 0 0 255))
 ;; dark and light yellow (#FFBB00 & #FFDF40)
@@ -22,6 +23,7 @@
 ;;   https://webaim.org/resources/contrastchecker/
 (struct text-palette
   (text background))
+(define tp-A-DD (text-palette color-white color-A-DD))
 (define tp-A-D (text-palette color-white color-A-D))
 (define tp-A-L (text-palette color-white color-A-L))
 (define tp-B-D (text-palette color-black color-B-D))
@@ -33,9 +35,9 @@
 (define tp-stack tp-black)
 (define tp-stack-frame tp-B-D)
 (define tp-calling tp-B-D)
-(define tp-called tp-A-D)
+(define tp-called tp-A-L)
 (define tp-returning tp-A-D)
-(define tp-returned tp-A-D)
+(define tp-returned tp-A-DD)
 (define tp-terminated tp-black)
 (define tp-errored tp-C)
 
@@ -68,8 +70,10 @@
   ;;; (define color-refer color-other)
 
 (define (text s)
+  (pre-text 'modern))
+define (pre-text s font-family)
   (define style
-    (cons (current-text-color) 'modern))
+    (cons (current-text-color) font-family))
   (if (equal? s "")
       (pict-text " " style)
       (apply vl-append
@@ -237,7 +241,7 @@
   (define padding 5)
 
   (define (field-label name)
-    (text name))
+    (pre-text name 'symbol))
   (define (field-value value)
     (parameterize ([current-text-palette tp-white])
       (bg (text value))))
