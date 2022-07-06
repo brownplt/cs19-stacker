@@ -146,9 +146,11 @@
   (define ((pict-of-stack heap) stack)
     (parameterize ([current-text-palette tp-stack])
     (box
-     (apply vl-append
-            (field-label "Stack")
-            (map (pict-of-sf heap) (reverse stack))))))
+     (vl-append
+        padding
+        (field-label "Stack")
+        (apply vl-append
+                (map (pict-of-sf heap) (reverse stack)))))))
 
   (define (is-env? heapitem)
     (match-define (list addr hv) heapitem)
@@ -244,7 +246,14 @@
     (pre-text name 'system))
   (define (field-value value)
     (parameterize ([current-text-palette tp-white])
-      (bg (text value))))
+      (bg (let ([value-pict (text value)])
+            (cc-superimpose
+              (filled-rectangle
+                (+ 2 (pict-width value-pict))
+                (pict-height value-pict)
+                #:draw-border? #f
+                #:color (current-background-color))
+              value-pict)))))
   (define (field-pict name p)
     (ht-append padding (field-label name) p))
   (define (field name value)

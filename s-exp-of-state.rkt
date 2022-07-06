@@ -20,10 +20,16 @@
                    (hang : (Number Doc -> Doc))
                    (v-concat : ((Listof Doc) -> Doc))
                    (v-append : (Doc Doc -> Doc))
-                   (vsb-concat : ((Listof Doc) -> Doc))
+                   (hs-append : (Doc Doc -> Doc))
+                   (vs-concat : ((Listof Doc) -> Doc))
                    (h-concat : ((Listof Doc) -> Doc))
                    (hs-concat : ((Listof Doc) -> Doc))
                    (pretty-format : (Doc -> String))))
+(require (opaque-type-in pprint (Doc doc?))
+         (rename-in 
+           (typed-in pprint
+                   (pretty-format : (Doc Number -> String)))
+           [pretty-format pretty-format/width]))
 (require (typed-in "show.rkt" [string-of-o : (Obs -> String)]))
 (require (typed-in racket
                    [number->string : (Number -> String)]
@@ -33,6 +39,9 @@
 (require (opaque-type-in racket [Any any/c]))
 (require (rename-in (typed-in racket [identity : ('a -> Any)]) [identity inj]))
 
+
+(define (pretty-format-top x)
+  (pretty-format/width x 40))
 
 (define (string-of-val the-heap)
   (let ([obs (obs-of-val the-heap)])
@@ -254,7 +263,7 @@
               (define (doc-of-def def)
                 (local ((define-values (x e) def))
                   (doc-paren
-                   (vsb-concat
+                   (vs-concat
                     (list
                      (symbol "defvar")
                      (doc-of-x x)
@@ -269,7 +278,13 @@
                    def*
                    (list body)))))
               (define (doc-app e*)
-                (doc-list e*))
+                (doc-list e*)
+                #;
+                (let ([rator (first e*)]
+                      [rand* (rest e*)])
+                  (if (empty? rand*)
+                      (doc-paren rator)
+                      (doc-paren (hs-append rator (align (vs-concat rand*)))))))
               (define (doc-let bind* body)
                 (head-body
                  (list
@@ -286,7 +301,7 @@
                  body))
               (define (doc-set! x e)
                 (doc-paren
-                 (vsb-concat
+                 (vs-concat
                   (list
                    (symbol "set!")
                    x
@@ -465,17 +480,17 @@
                 (local ((define-values (env ectx ann) sf))
                   (inj (list (string-of-env env) (string-of-ectx ectx) (string-of-ann ann)))))
               (define (string-of-ann ann)
-                (pretty-format (doc-of-ca ann)))
+                (pretty-format-top (doc-of-ca ann)))
               (define (string-of-x x)
-                (pretty-format (doc-of-x x)))
+                (pretty-format-top (doc-of-x x)))
               (define (string-of-e e)
-                (pretty-format (doc-of-e e)))
+                (pretty-format-top (doc-of-e e)))
               (define (string-of-ha ha)
-                (pretty-format (doc-of-ha ha)))
+                (pretty-format-top (doc-of-ha ha)))
               (define (string-of-v v)
-                (pretty-format (doc-of-v v)))
+                (pretty-format-top (doc-of-v v)))
               (define (string-of-ectx ectx)
-                (pretty-format
+                (pretty-format-top
                   (ind-List (reverse (map doc-of-f ectx))
                     (text "□")
                     (lambda (IH x)
