@@ -71,7 +71,7 @@
 
 (define (text s)
   (pre-text 'modern))
-define (pre-text s font-family)
+(define (pre-text s font-family)
   (define style
     (cons (current-text-color) font-family))
   (if (equal? s "")
