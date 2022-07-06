@@ -11,8 +11,7 @@
 
 (define (run show-closures? e)
   (define check void)
-  (eval show-closures? check my-pict-of-state (parse e))
-  #;(eval show-closures? check pictify (parse e))
+  (eval #t check my-pict-of-state (parse e))
   )
 
 (define-syntax (my-module-begin stx)
