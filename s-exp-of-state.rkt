@@ -278,13 +278,7 @@
                    def*
                    (list body)))))
               (define (doc-app e*)
-                (doc-list e*)
-                #;
-                (let ([rator (first e*)]
-                      [rand* (rest e*)])
-                  (if (empty? rand*)
-                      (doc-paren rator)
-                      (doc-paren (hs-append rator (align (vs-concat rand*)))))))
+                (doc-list e*))
               (define (doc-let bind* body)
                 (head-body
                  (list
