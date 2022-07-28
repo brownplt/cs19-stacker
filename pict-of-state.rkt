@@ -2,8 +2,8 @@
 (provide pict-of-state)
 (require pict)
 (require (rename-in pict [text pict-text]))
-(require pict/color)
 (require racket/draw)
+ (require (only-in framework editor:get-current-preferred-font-size))
 
 ;;; This color palette has been checked with
 ;;;   https://color.adobe.com/zh/create/color-accessibility
@@ -47,33 +47,14 @@
 (define (current-background-color)
   (text-palette-background (current-text-palette)))
 
-;;; ;;; The color palette is from https://personal.sron.nl/~pault/#fig:scheme_bright
-;;; ;;; dark blue
-;;; (define color-stack-item color-blue)
-;;; ;;; light blue
-;;; (define color-stack-bg color-cyne)
-;;; ;;; green
-;;; (define color-env color-green)
-;;; ;;; yellow
-;;; (define color-closure color-yellow)
-;;; ;;; black
-;;; (define color-vector color-black)
-;;; ;;; purple
-;;; (define color-cons color-purple)
-;;; ;;; grey
-;;; (define color-other color-grey)
-;;; ;; A special color
-;;; (define color-error color-red)
-  ;;; (define color-comp color-closure)
-  ;;; (define color-return color-stack-item)
-  ;;; (define color-terminate color-stack-bg)
-  ;;; (define color-refer color-other)
-
 (define (text s)
   (pre-text s 'modern))
 (define (pre-text s font-family)
   (define style
-    (cons (current-text-color) font-family))
+    (cons (current-text-color)
+      (make-object font%
+        (editor:get-current-preferred-font-size)
+        font-family)))
   (if (equal? s "")
       (pict-text " " style)
       (apply vl-append
